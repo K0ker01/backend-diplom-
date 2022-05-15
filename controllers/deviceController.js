@@ -68,6 +68,60 @@ class DeviceController {
         return res.json(device)
 
     }
+    async destroy (req, res, next)  {
+        try{
+            const {id} = req.params 
+            const FindDeviceById = await Device.findByPk(id)
+            if (!FindDeviceById){
+                res.status(404).json({
+                    message: `device with id ${id} not found`
+                })
+            }
+            const deleteDevice = FindDeviceById.destroy()
+            if (!deleteDevice){
+                res.status(503).json({
+                    message:`device with id ${id} failed delete`
+                })
+            }
+            res.status(200).json({
+                message:`device with ${id} deleted`
+            })
+            return res.json(deleteDevice)
+        }catch (e){
+            next(ApiError.badRequest(e.message))}   
+    }
+    async update (req, res, next){
+        try{
+            const {id} = req.params
+            const {name, price, brandId, typeId, info } = req.body
+            const FindDeviceById = await Device.findOne({
+                where: {
+                    id
+                }
+            })
+            if (!FindDeviceById){
+                res.status(400).json({
+                    message: `device with id ${id} not found`
+                })
+            }
+            if (name) FindDeviceById.name = name
+            if (price) FindDeviceById.price = price
+            if (brandId) FindDeviceById.brandId = brandId
+            if (typeId) FindDeviceById.typeId = typeId
+            if (info) FindDeviceById.info = info
+            const updateDevice = await FindDeviceById.save()
+            if(!updateDevice){
+                res.status(400).json({
+                    message:`data device with ${id} failed update`
+                })
+            }
+            res.status(200).json({
+                data: updateDevice
+            })
+
+        }catch (e){
+            next(ApiError.badRequest(e.message))}   
+    }
 
 }
 
