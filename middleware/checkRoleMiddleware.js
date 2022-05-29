@@ -19,5 +19,10 @@ module.exports = function(role){
         } catch (e) {
             res.status(401).json({message: "Не авторизован"})
         }
+
+
+
+
+    
     }   ;
 }
