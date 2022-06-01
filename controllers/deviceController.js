@@ -6,9 +6,12 @@ const ApiError = require ('../error/ApiError')
 class DeviceController {
     async create(req, res, next){
         try{
-            let {name, price, brandId, typeId, info, img} = req.body
-            
-         
+            let {name, price, oldprice, brandId, typeId, info} = req.body
+            const {img} = req.files
+            let fileName = uuid.v4() + ".jpg"
+            img.mv(path.resolve(__dirname, '..', 'static', fileName))
+            const device = await Device.create({name, price, oldprice, brandId, typeId, img: fileName});
+           
 
             if(info){
                 info = JSON.parse(info)
@@ -20,19 +23,32 @@ class DeviceController {
                     })
                 )
             }
-            const device = await Device.create({name, price, brandId, typeId, img })
-
              return res.json(device)
-        }catch(e){
-            next(ApiError.badRequest(e.message))
-        }
+            } catch (e) {
+                next(e);
+            }
   
     }
 
-    async getAll(req, res){
-        const devices = await Device.findAll()
+    async getAll(req, res) {
+        let {brandId, typeId, limit, page} = req.query
+        page = page || 1
+        limit = limit || 50
+        let offset = page * limit - limit
+        let devices;
+        if (!brandId && !typeId) {
+            devices = await Device.findAndCountAll({limit, offset})
+        }
+        if (brandId && !typeId) {
+            devices = await Device.findAndCountAll({where:{brandId}, limit, offset})
+        }
+        if (!brandId && typeId) {
+            devices = await Device.findAndCountAll({where:{typeId}, limit, offset})
+        }
+        if (brandId && typeId) {
+            devices = await Device.findAndCountAll({where:{typeId, brandId}, limit, offset})
+        }
         return res.json(devices)
-
     }
 
     async getOne(req, res){
@@ -74,7 +90,7 @@ class DeviceController {
     async update (req, res, next){
         try{
             const {id} = req.params
-            const {name, price, brandId, typeId, info } = req.body
+            const {name, price, oldprice, brandId, typeId, info } = req.body
             const FindDeviceById = await Device.findOne({
                 where: {
                     id
@@ -87,6 +103,7 @@ class DeviceController {
             }
             if (name) FindDeviceById.name = name
             if (price) FindDeviceById.price = price
+            if (oldprice) FindDeviceById.oldprice = oldprice
             if (brandId) FindDeviceById.brandId = brandId
             if (typeId) FindDeviceById.typeId = typeId
             if (info) FindDeviceById.info = info
