@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const {Token} = require('../models/models')
+const ApiError = require ('../error/ApiError')
 
 class TokenService {
     generateTokens(payload) {
@@ -39,9 +40,13 @@ class TokenService {
         return token;
     }
 
-    async removeToken(refreshToken) {
-        const tokenData = await Token.deleteOne({refreshToken})
-        return tokenData;
+    async removeToken( userId, refreshToken) {
+        const tokenData = await Token.findOne({user: userId})
+        if (tokenData) {
+            tokenData.refreshToken = refreshToken;
+            return tokenData.destroy();
+        }
+        
     }
 
     async findToken(refreshToken) {
