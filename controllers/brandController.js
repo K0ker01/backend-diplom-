@@ -46,7 +46,6 @@ class BrandController {
             res.status(200).json({
                 message:`brand with ${id} deleted`
             })
-            return res.json(deleteBrand)
         }catch (e){
             next(ApiError.badRequest(e.message))}   
     }

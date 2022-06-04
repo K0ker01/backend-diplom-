@@ -46,7 +46,6 @@ class TypeController {
             res.status(200).json({
                 message:`type with ${id} deleted`
             })
-            return res.json(deleteType)
         }catch (e){
             next(ApiError.badRequest(e.message))}   
     }
