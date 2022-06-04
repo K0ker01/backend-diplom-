@@ -67,7 +67,10 @@ class UserService {
         if (!userData || !tokenFromDb) {
             throw ApiError.UnauthorizedError();
         }
-        const user = await User.findById(userData.id);
+        const user = await User.findOne(
+            {
+                where: userData.id
+            });
         const userDto = new UserDto(user);
         const tokens = tokenService.generateTokens({...userDto});
 
@@ -76,7 +79,7 @@ class UserService {
     }
 
     async getAllUsers() {
-        const users = await User.find();
+        const users = await User.findAndCountAll();
         return users;
     }
 }
