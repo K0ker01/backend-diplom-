@@ -79,7 +79,6 @@ class DeviceController {
             res.status(200).json({
                 message:`device with ${id} deleted`
             })
-            return res.json(deleteDevice)
         }catch (e){
             next(ApiError.badRequest(e.message))}   
     }
