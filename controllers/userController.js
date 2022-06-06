@@ -1,7 +1,6 @@
 const ApiError = require('../error/ApiError')
 const userService = require('../service/user-service');
 const {validationResult} = require('express-validator');
-const { is } = require('express/lib/request')
 
 class UserController {
     async registration(req, res, next) {
@@ -45,7 +44,7 @@ class UserController {
         try {
             const activationLink = req.params.link;
             await userService.activate(activationLink);
-            return res.redirect(process.env.CLIENT_URL);
+            return res.redirect(process.env.CLIENT_URL);    
         } catch (e) {
             next(e);
         }
