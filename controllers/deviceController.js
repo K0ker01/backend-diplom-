@@ -10,7 +10,6 @@ class DeviceController {
             const {img}= req.files
             let fileName = uuid.v4() + ".jpg"
             img.mv(path.resolve(__dirname, '..', 'static', fileName))
-            
             const device = await Device.create({name, price, oldprice, brandId, typeId, img: fileName});
            
 
@@ -70,17 +69,17 @@ class DeviceController {
             const FindDeviceById = await Device.findByPk(id)
             if (!FindDeviceById){
                 res.status(404).json({
-                    message: `device with id ${id} not found`
+                    message: `Device with id ${id} not found`
                 })
             }
             const deleteDevice = FindDeviceById.destroy()
             if (!deleteDevice){
                 res.status(503).json({
-                    message:`device with id ${id} failed delete`
+                    message:`Device with id ${id} failed delete`
                 })
             }
             res.status(200).json({
-                message:`device with ${id} deleted`
+                message:`Device with ${id} deleted`
             })
         }catch (e){
             next(ApiError.badRequest(e.message))}   
@@ -97,7 +96,7 @@ class DeviceController {
             })
             if (!FindDeviceById){
                 res.status(400).json({
-                    message: `device with id ${id} not found`
+                    message: `Device with id ${id} not found`
                 })
             }
             if (name) FindDeviceById.name = name
@@ -109,7 +108,7 @@ class DeviceController {
             const updateDevice = await FindDeviceById.save()
             if(!updateDevice){
                 res.status(400).json({
-                    message:`data device with ${id} failed update`
+                    message:`data Device with ${id} failed update`
                 })
             }
             res.status(200).json({

@@ -16,16 +16,17 @@ class TypeController {
     }
 
     async getOne(req, res){
-        const{id}=req.params
-        const types = await Type.findAll(
-            {
-                where:{id}
-                
-            },
-
-        )
-        return res.json(types)
-
+        try{
+            const{id}=req.params
+            const types = await Type.findOne({where:{id}})
+                if (!types){
+                    res.status(400).json({
+                        message: `Type with id ${id} not found`
+                    })
+                }
+            return res.json(types)
+        }catch(e){
+            next(ApiError.badRequest(e.message))}
     }
 
     async destroy (req, res, next)  {
@@ -34,17 +35,17 @@ class TypeController {
             const FindTypeById = await Type.findByPk(id)
             if (!FindTypeById){
                 res.status(404).json({
-                    message: `type with id ${id} not found`
+                    message: `Type with id ${id} not found`
                 })
             }
             const deleteType = FindTypeById.destroy()
             if (!deleteType){
                 res.status(503).json({
-                    message:`type with id ${id} failed delete`
+                    message:`Type with id ${id} failed delete`
                 })
             }
             res.status(200).json({
-                message:`type with ${id} deleted`
+                message:`Type with ${id} deleted`
             })
         }catch (e){
             next(ApiError.badRequest(e.message))}   
@@ -61,14 +62,14 @@ class TypeController {
             })
             if (!FindTypeById){
                 res.status(400).json({
-                    message: `type with id ${id} not found`
+                    message: `Type with id ${id} not found`
                 })
             }
             if (name) FindTypeById.name = name
             const updateType = await FindTypeById.save()
             if(!updateType){
                 res.status(400).json({
-                    message:`data type with ${id} failed update`
+                    message:`data Type with ${id} failed update`
                 })
             }
             res.status(200).json({

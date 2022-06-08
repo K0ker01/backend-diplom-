@@ -16,16 +16,17 @@ class BrandController {
     }
 
     async getOne(req, res){
-        const{id}=req.params
-        const brands = await Brand.findAll(
-            {
-                where:{id}
-                
-            },
-
-        )
-        return res.json(brands)
-
+        try{
+            const{id}=req.params
+            const brands = await Brand.findOne({where:{id}})
+                if (!brands){
+                    res.status(400).json({
+                        message: `Brand with id ${id} not found`
+                    })
+                }
+            return res.json(brands)
+        }catch(e){
+            next(ApiError.badRequest(e.message))}
     }
 
     async destroy (req, res, next)  {
@@ -34,17 +35,17 @@ class BrandController {
             const FindBrandById = await Brand.findByPk(id)
             if (!FindBrandById){
                 res.status(404).json({
-                    message: `brand with id ${id} not found`
+                    message: `Brand with id ${id} not found`
                 })
             }
             const deleteBrand = FindBrandById.destroy()
             if (!deleteBrand){
                 res.status(503).json({
-                    message:`brand with id ${id} failed delete`
+                    message:`Brand with id ${id} failed delete`
                 })
             }
             res.status(200).json({
-                message:`brand with ${id} deleted`
+                message:`Brand with ${id} deleted`
             })
         }catch (e){
             next(ApiError.badRequest(e.message))}   
@@ -61,14 +62,14 @@ class BrandController {
             })
             if (!FindBrandById){
                 res.status(400).json({
-                    message: `brand with id ${id} not found`
+                    message: `Brand with id ${id} not found`
                 })
             }
             if (name) FindBrandById.name = name
             const updateBrand = await FindBrandById.save()
             if(!updateBrand){
                 res.status(400).json({
-                    message:`data brand with ${id} failed update`
+                    message:`data Brand with ${id} failed update`
                 })
             }
             res.status(200).json({
