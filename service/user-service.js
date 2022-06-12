@@ -4,10 +4,7 @@ const uuid = require('uuid');
 const mailService = require('./mail-service');
 const tokenService = require('./token-service');
 const UserDto = require('../dtos/user-dto');
-const ApiError = require('../error/ApiError')
-
-
-
+const ApiError = require('../error/ApiError');
 
 class UserService {
     async registration(email, password) {
@@ -19,7 +16,7 @@ class UserService {
         const activationLink = uuid.v4(); // v34fa-asfasf-142saf-sa-asf
 
         const user = await User.create({email, password: hashPassword, activationLink})
-        await mailService.sendActivationMail(email, `${process.env.CLIENT_URL}/api/activate/${activationLink}`);
+        await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
 
         const userDto = new UserDto(user); // id, email, isActivated
         const tokens = tokenService.generateTokens({...userDto});
