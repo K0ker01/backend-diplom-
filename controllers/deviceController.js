@@ -31,7 +31,9 @@ class DeviceController {
 
     async getAll(req, res) {
         let {brandId, typeId} = req.query
+        // const {sort} = req.query
         let devices;
+
         if (!brandId && !typeId) {
             devices = await Device.findAndCountAll({})
         }
@@ -44,6 +46,13 @@ class DeviceController {
         if (brandId && typeId) {
             devices = await Device.findAndCountAll({where:{typeId, brandId}})
         }
+        
+        // switch (sort){
+        //     case'price':
+        //         devices = await Device.findOne({user: req.user.id, parents: req.query.parents}).sort({price:1})
+        //         break
+        // }
+
         return res.json(devices)
     }
 
