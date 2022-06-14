@@ -47,11 +47,6 @@ class DeviceController {
             devices = await Device.findAndCountAll({where:{typeId, brandId}})
         }
         
-        // switch (sort){
-        //     case'price':
-        //         devices = await Device.findOne({user: req.user.id, parents: req.query.parents}).sort({price:1})
-        //         break
-        // }
 
         return res.json(devices)
     }

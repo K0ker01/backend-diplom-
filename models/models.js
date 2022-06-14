@@ -29,6 +29,7 @@ const Device = sequelize.define('device', {
     price: {type: DataTypes.INTEGER, allowNull: false},
     oldprice: {type: DataTypes.INTEGER, defaultValue: null},
     img: {type: DataTypes.STRING, allowNull: false},
+    count: {type: DataTypes.INTEGER, defaultValue: 1}
     
 })
 
