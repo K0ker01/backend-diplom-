@@ -37,7 +37,12 @@ class UserService {
         await user.save();
     }
 
-    async login(email, password) {
+    async login(email, password, refreshToken) {
+
+        const tokendata = await User.findOne({refreshToken})
+        if (!tokendata){
+            throw ApiError.BadRequest('Вы не зарегистрировались')
+        }
         const user = await User.findOne({email})
         if (!user) {
             throw ApiError.BadRequest('Пользователь с таким email не найден')
