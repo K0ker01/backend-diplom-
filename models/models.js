@@ -29,14 +29,12 @@ const Device = sequelize.define('device', {
     price: {type: DataTypes.INTEGER, allowNull: false},
     oldprice: {type: DataTypes.INTEGER, defaultValue: null},
     img: {type: DataTypes.STRING, allowNull: false},
-    count: {type: DataTypes.INTEGER, defaultValue: 1}
+    count: {type: DataTypes.INTEGER, defaultValue: 1},
+    inventor: {type: DataTypes.BOOLEAN, defaultValue: null},
     
 })
 
-const Inventor = sequelize.define('inventor', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    name: {type: DataTypes.STRING, unique: true, allowNull: false},
-})
+
 
 const Type = sequelize.define('type', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
@@ -68,9 +66,7 @@ const TypePower = sequelize.define('type_power', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
 
-const TypeInventor = sequelize.define('type_inventor', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-})
+
 
 User.hasOne(Basket)
 Basket.belongsTo(User)
@@ -81,8 +77,7 @@ BasketDevice.belongsTo(Basket)
 Type.hasMany(Device)
 Device.belongsTo(Type)
 
-Inventor.hasMany(Device)
-Device.belongsTo(Inventor)
+
 
 Brand.hasMany(Device)
 Device.belongsTo(Brand)
@@ -99,7 +94,7 @@ DeviceInfo.belongsTo(Device)
 Type.belongsToMany(Brand,  {through: TypeBrand })
 Brand.belongsToMany(Type,  {through: TypeBrand })
 Power.belongsToMany(Type, {through: TypePower})
-Inventor.belongsToMany(Type, {through: TypeInventor})
+
 
 
 module.exports = {
@@ -108,12 +103,9 @@ module.exports = {
     Basket,
     BasketDevice,
     Device,
-    Inventor,
     Type,
     Brand,
     Power,
     TypeBrand,
-    TypePower,
-    DeviceInfo
 }
 
