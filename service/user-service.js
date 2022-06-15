@@ -50,7 +50,7 @@ class UserService {
         const tokens = tokenService.generateTokens({...userDto});
 
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
-        return {...tokens, user: userDto}
+        return {user: userDto, ...tokens} 
     }
 
     async logout(refreshToken) {
@@ -75,7 +75,7 @@ class UserService {
         const tokens = tokenService.generateTokens({...userDto});
 
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
-        return {...tokens, user: userDto}
+        return {user: userDto, ...tokens} 
     }
 
     async getAllUsers() {
