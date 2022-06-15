@@ -6,6 +6,7 @@ const tokenService = require('./token-service');
 const UserDto = require('../dtos/user-dto');
 const ApiError = require('../error/ApiError');
 
+
 class UserService {
     async registration(email, password, role) {
 
@@ -17,7 +18,7 @@ class UserService {
         const hashPassword = await bcrypt.hash(password, 5);
         const activationLink = uuid.v4(); // v34fa-asfasf-142saf-sa-asf0
 
-        const user = await User.create({email, password: hashPassword, role, activationLink})
+        const user = await User.create ({email, password: hashPassword, role, activationLink})
         await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`);
 
         
@@ -25,7 +26,8 @@ class UserService {
         const tokens = tokenService.generateTokens({...userDto});
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
-        return {user: userDto, ...tokens} 
+
+        return {...tokens,  user: userDto} 
     }
 
     async activate(activationLink) {
@@ -50,7 +52,7 @@ class UserService {
         const tokens = tokenService.generateTokens({...userDto});
 
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
-        return {user: userDto, ...tokens} 
+        return {...tokens, user: userDto} 
     }
 
     async logout(refreshToken) {
@@ -75,7 +77,7 @@ class UserService {
         const tokens = tokenService.generateTokens({...userDto});
 
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
-        return {user: userDto, ...tokens} 
+        return {...tokens, user: userDto} 
     }
 
     async getAllUsers() {
