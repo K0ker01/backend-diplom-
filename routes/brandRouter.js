@@ -4,10 +4,10 @@ const brandController = require('../controllers/brandController')
 const checkRole = require('../middleware/checkRoleMiddleware')
 
 
-router.post('/',/**checkRole('ADMIN'), */ brandController.create)
+router.post('/',checkRole('ADMIN'), brandController.create)
 router.get('/', brandController.getAll)
 router.get('/:id', brandController.getOne)
-router.delete('/:id',/**checkRole('ADMIN'), */ brandController.destroy)
-router.put('/:id',/**checkRole('ADMIN'), */ brandController.update)
+router.delete('/:id',checkRole('ADMIN'), brandController.destroy)
+router.put('/:id',checkRole('ADMIN'), brandController.update)
 
 module.exports = router
